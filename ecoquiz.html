@@ -35,44 +35,44 @@
 <main class="container text-center py-5">
 	<h1>Eco Quiz</h1>
 	<p>Test your knowledge about recycling and sustainability!</p>
-<section class="border rounded p-4 mt-4 mx-auto col-lg-7">
+<section id="quizSection" class="border rounded p-4 mt-4 mx-auto col-lg-7">
 	<div class="d-flex justify-content-between">
-		<p class="mb-0">Question 1 of 5</p>
-		<p class="mb-0">Score: 0/5</p>
+		<p class="mb-0" id="questionNumber">Question 1 of 5</p>
+		<p class="mb-0" id="scoreDisplay">Score: 0/5</p>
 	</div>
-		<h3 class="mt-4 mb-4">Which item can be recycled?</h3>
+		<h3 class="mt-4 mb-4" id="questionText">Which item can be recycled?</h3>
 	<div class="form-check border rounded p-3 ps-5 mb-2 text-start">
   <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault1">
-  <label class="form-check-label" for="radioDefault1">
+  <label class="form-check-label" for="radioDefault1" id="answer1">
     Clean Plastic Bottle
   </label>
 </div>
 <div class="form-check border rounded p-3 ps-5 mb-2 text-start">
   <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault2">
-  <label class="form-check-label" for="radioDefault2">
+  <label class="form-check-label" for="radioDefault2" id="answer2">
     Food Scraps
   </label>
 </div>
 	<div class="form-check border rounded p-3 ps-5 mb-2 text-start">
   <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault3">
-  <label class="form-check-label" for="radioDefault3">
+  <label class="form-check-label" for="radioDefault3" id="answer3">
     Used Tissue
   </label>
 </div>
 <div class="form-check border rounded p-3 ps-5 mb-2 text-start">
   <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault4">
-  <label class="form-check-label" for="radioDefault4">
+  <label class="form-check-label" for="radioDefault4" id="answer4">
     Dirty Napkin
   </label>
 </div>
-<button type="button" class="btn btn-success mt-3">Next Question</button>
+<button type="button" id="nextBtn" class="btn btn-success mt-3">Next Question</button>
 </section>
-<section class="border rounded p-4 mt-4 mx-auto col-lg-7 d-none">
+<section id="resultsSection" class="border rounded p-4 mt-4 mx-auto col-lg-7 d-none">
 	<h2>Quiz Complete!</h2>
 	<p>Your final score</p>
-	<h1>4/5</h1>
+	<h1 id="finalScore">0/5</h1>
 	<p>Great job! Keep learning about sustainability!</p>
-	<button type="button" class="btn btn-success mt-3">Try Again</button>
+	<button type="button" id="restartBtn" class="btn btn-success mt-3">Try Again</button>
 	<a href= "index.html">Back to Home</a>
 </section>
 </main>
@@ -81,6 +81,155 @@
     <p>Page created by Tenhiz Sichinava</p>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+</script>
+	<script>
+
+let questions = [
+    {
+        question: "Which item can be recycled?",
+        answers: ["Clean Plastic Bottle", "Food Scraps", "Used Tissue", "Dirty Napkin"],
+        correct: 0
+    },
+    {
+        question: "How can you reduce food waste?",
+        answers: ["Throw away leftovers", "Buy too much food", "Plan meals", "Waste food"],
+        correct: 2
+    },
+    {
+        question: "Which bin is used for food scraps?",
+        answers: ["Blue bin", "Brown bin", "Black bin", "Glass bin"],
+        correct: 1
+    },
+    {
+        question: "What should you do with usable old clothes?",
+        answers: ["Burn them", "Throw them away", "Waste them", "Donate them"],
+        correct: 3
+    },
+    {
+        question: "What is the main goal of SDG 12?",
+        answers: ["Produce more waste", "Responsible consumption and production", "Use more plastic", "Waste resources"],
+        correct: 1
+    },
+    {
+        question: "Which action saves electricity?",
+        answers: ["Leave lights on", "Keep the TV on", "Turn off unused lights", "Use more energy"],
+        correct: 2
+    },
+    {
+        question: "What does reusing mean?",
+        answers: ["Using an item again", "Throwing it away", "Burning it", "Buying more plastic"],
+        correct: 0
+    },
+    {
+        question: "Where should broken electronic devices be taken?",
+        answers: ["Food waste bin", "Regular rubbish bin", "Glass bin", "WEEE recycling centre"],
+        correct: 3
+    },
+    {
+        question: "What is composting?",
+        answers: ["Burning plastic", "Turning organic waste into compost", "Throwing away clothes", "Recycling metal"],
+        correct: 1
+    },
+    {
+        question: "Which habit helps reduce plastic waste?",
+        answers: ["Buying disposable bottles", "Using plastic bags once", "Using a reusable water bottle", "Throwing plastic into nature"],
+        correct: 2
+    }
+];
+
+let selectedQuestions = [];
+let currentQuestion = 0;
+let score = 0;
+
+let radioButtons = document.querySelectorAll('input[name="radioDefault"]');
+
+// Start a new game
+function startQuiz() {
+    let availableQuestions = [...questions];
+
+    selectedQuestions = [];
+
+    // Randomly select 5 questions without repeats
+    for (let i = 0; i < 5; i++) {
+        let randomIndex = Math.floor(Math.random() * availableQuestions.length);
+
+        selectedQuestions.push(availableQuestions[randomIndex]);
+
+        availableQuestions.splice(randomIndex, 1);
+    }
+
+    currentQuestion = 0;
+    score = 0;
+
+    document.getElementById("scoreDisplay").textContent = "Score: 0/5";
+
+    document.getElementById("quizSection").classList.remove("d-none");
+    document.getElementById("resultsSection").classList.add("d-none");
+
+    showQuestion();
+}
+
+// Display the current question
+function showQuestion() {
+    let current = selectedQuestions[currentQuestion];
+
+    document.getElementById("questionNumber").textContent =
+        "Question " + (currentQuestion + 1) + " of 5";
+
+    document.getElementById("questionText").textContent = current.question;
+
+    for (let i = 0; i < 4; i++) {
+        document.getElementById("answer" + (i + 1)).textContent =
+            current.answers[i];
+
+        radioButtons[i].checked = false;
+    }
+
+    document.getElementById("nextBtn").textContent =
+        currentQuestion === 4 ? "See Results" : "Next Question";
+}
+
+// Next Question button
+document.getElementById("nextBtn").addEventListener("click", function() {
+    let selectedAnswer = -1;
+
+    for (let i = 0; i < radioButtons.length; i++) {
+        if (radioButtons[i].checked) {
+            selectedAnswer = i;
+        }
+    }
+
+    if (selectedAnswer === -1) {
+        alert("Please select an answer!");
+        return;
+    }
+
+    if (selectedAnswer === selectedQuestions[currentQuestion].correct) {
+        score++;
+    }
+
+    document.getElementById("scoreDisplay").textContent =
+        "Score: " + score + "/5";
+
+    if (currentQuestion < 4) {
+        currentQuestion++;
+        showQuestion();
+    } else {
+        document.getElementById("quizSection").classList.add("d-none");
+        document.getElementById("resultsSection").classList.remove("d-none");
+
+        document.getElementById("finalScore").textContent = score + "/5";
+    }
+});
+
+// Try Again button
+document.getElementById("restartBtn").addEventListener("click", function() {
+    startQuiz();
+});
+
+// Start the first game
+startQuiz();
+
 </script>
 </body>
 </html>
