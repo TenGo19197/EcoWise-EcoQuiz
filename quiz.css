@@ -122,3 +122,20 @@
         font-size: 22px;
     }
 }
+
+/* Back to Home button */
+.quiz-page .home-btn {
+    background-color: #ECF7DF;
+    color: #245C48;
+    border: 2px solid #97BE8E;
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.quiz-page .home-btn:hover {
+    background-color: #97BE8E;
+    color: #173D2E;
+    border-color: #245C48;
+}
